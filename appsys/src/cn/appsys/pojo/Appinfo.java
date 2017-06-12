@@ -28,10 +28,27 @@ public class Appinfo {
 	private String logoPicPath;//LOGO图片url路径
 	private String LocPath;//LOGO图片的服务器存储路径
 	private int versionId;//最新的版本id
+	
+	private String flatformName;//手机，平板，通用
+	
+	private String statusName;
+	
+	public String getStatusName() {
+		return statusName;
+	}
+	public void setStatusName(String statusName) {
+		this.statusName = statusName;
+	}
+	public String getFlatformName() {
+		return flatformName;
+	}
+	public void setFlatformName(String flatformName) {
+		this.flatformName = flatformName;
+	}
 	public int getId() {
 		return id;
 	}
-	public void setId(int id) {
+	public void setId(int id) { 
 		this.id = id;
 	}
 	public String getSoftwareName() {
