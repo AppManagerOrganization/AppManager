@@ -2,8 +2,21 @@ package cn.appsys.service;
 
 import java.util.List;
 
+
 import cn.appsys.pojo.Appinfo;
 
 public interface AppinfoService {
-	public List<Appinfo> selectApplist();
+	public List<Appinfo> selectApplist(String softwareName,int status,int flatformId,int categoryLevel1, int categoryLevel2,int categoryLevel3, int index, int pageSize);
+	
+	public int selectCount(Appinfo appinfo);
+	
+	public Appinfo selectAppByid(int id);
+	
+	public boolean addapp(Appinfo appinfo);
+	
+	public boolean selectByAPKName(String APKName);
+	
+	public boolean deleteApp(int id);
+	
+	public boolean selectById(int id);
 }

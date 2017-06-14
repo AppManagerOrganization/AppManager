@@ -2,6 +2,8 @@ package cn.appsys.pojo;
 
 import java.util.Date;
 
+import org.springframework.format.annotation.DateTimeFormat;
+
 public class Devuser {
 	private int id;
 	private String devCode;//开发者账号
@@ -10,6 +12,7 @@ public class Devuser {
 	private String devEmail;//开发者电子邮箱
 	private String decInfo;//开发者简介
 	private int createdBy;
+	@DateTimeFormat(pattern="yyyy-MM-dd")
 	private Date creationDate;
 	private int modifyBy;
 	private Date modifyDate;

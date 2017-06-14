@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.appsys.dao.AppCategoryMapper">
+ 
+	<select id="selectFirst" resultType="Appcategory">
+		SELECT id,categoryName,parentId FROM app_category WHERE parentId IS NULL
+	</select>
+	
+	<select id="selectSecond" resultType="Appcategory">
+		SELECT id,categoryName FROM app_category WHERE parentId = #{parentId}
+	</select>
+	
+	
+ 
+</mapper>

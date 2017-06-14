@@ -1,6 +1,6 @@
 package cn.appsys.pojo;
 
-import java.math.BigDecimal;
+
 import java.util.Date;
 
 public class Appinfo {
@@ -9,7 +9,7 @@ public class Appinfo {
 	private String APKName;//apk名称
 	private String supportROM;//支持ROM
 	private String interfaceLanguage;//界面语言
-	private BigDecimal softwareSize;//软件大小
+	private double softwareSize;//软件大小
 	private Date updateDate;//更新日期
 	private int devId;//开发者ID
 	private String appInfo;//应用简介
@@ -33,6 +33,36 @@ public class Appinfo {
 	
 	private String statusName;
 	
+	private String categoryLevel1Name;
+	private String categoryLevel2Name;
+	private String categoryLevel3Name;
+	
+	private String versionNo;
+	
+	public String getVersionNo() {
+		return versionNo;
+	}
+	public void setVersionNo(String versionNo) {
+		this.versionNo = versionNo;
+	}
+	public String getCategoryLevel1Name() {
+		return categoryLevel1Name;
+	}
+	public void setCategoryLevel1Name(String categoryLevel1Name) {
+		this.categoryLevel1Name = categoryLevel1Name;
+	}
+	public String getCategoryLevel2Name() {
+		return categoryLevel2Name;
+	}
+	public void setCategoryLevel2Name(String categoryLevel2Name) {
+		this.categoryLevel2Name = categoryLevel2Name;
+	}
+	public String getCategoryLevel3Name() {
+		return categoryLevel3Name;
+	}
+	public void setCategoryLevel3Name(String categoryLevel3Name) {
+		this.categoryLevel3Name = categoryLevel3Name;
+	}
 	public String getStatusName() {
 		return statusName;
 	}
@@ -75,10 +105,10 @@ public class Appinfo {
 	public void setInterfaceLanguage(String interfaceLanguage) {
 		this.interfaceLanguage = interfaceLanguage;
 	}
-	public BigDecimal getSoftwareSize() {
+	public double getSoftwareSize() {
 		return softwareSize;
 	}
-	public void setSoftwareSize(BigDecimal softwareSize) {
+	public void setSoftwareSize(double softwareSize) {
 		this.softwareSize = softwareSize;
 	}
 	public Date getUpdateDate() {

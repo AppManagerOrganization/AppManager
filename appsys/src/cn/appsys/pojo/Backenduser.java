@@ -11,6 +11,14 @@ public class Backenduser {
 	private Date creationDate;
 	private int modifyBy;
 	private Date modifyDate;
+	private String userTypeName;
+	
+	public String getUserTypeName() {
+		return userTypeName;
+	}
+	public void setUserTypeName(String userTypeName) {
+		this.userTypeName = userTypeName;
+	}
 	public int getId() {
 		return id;
 	}

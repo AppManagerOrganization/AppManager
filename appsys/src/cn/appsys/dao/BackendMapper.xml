@@ -3,8 +3,9 @@
 <mapper namespace="cn.appsys.dao.BackendMapper">
 	
 	<select id="selectToLogin" resultType="Backenduser">
-		SELECT * FROM backend_user
-			<where>
+		SELECT  backend_user.id,userCode,userName,userType,valueName AS userTypeName FROM backend_user
+			INNER JOIN data_dictionary ON backend_user.userType = data_dictionary.valueId
+				<where>
 				<if test="userCode !=null and userCode !=''">
 					and userCode = #{userCode}
 				</if>
@@ -12,6 +13,7 @@
 					and userPassword = #{userPassword}
 				</if>	
 			</where>
+			and  typeName='用户类型'
 	
 	</select>
 

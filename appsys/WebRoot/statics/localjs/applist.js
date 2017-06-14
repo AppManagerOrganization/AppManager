@@ -2,6 +2,7 @@ $("#queryCategoryLevel1").change(function(){
 	var queryCategoryLevel1 = $("#queryCategoryLevel1").val();
 	if(queryCategoryLevel1 != '' && queryCategoryLevel1 != null){
 		$.ajax({
+			
 			type:"GET",//请求类型
 			url:"categorylevellist.json",//请求的url
 			data:{pid:queryCategoryLevel1},//请求参数
