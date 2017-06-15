@@ -12,11 +12,7 @@ public class AppCategoryServiceImpl implements AppCategoryService {
 	@Autowired
 	AppCategoryMapper appCategoryMapper;
 	
-	@Override
-	public List<Appcategory> selectFirst() {
-		return appCategoryMapper.selectFirst();
-	}
-	
+
 	@Override
 	public List<Appcategory> selectSecond(int parentId) {
 		return appCategoryMapper.selectSecond(parentId);

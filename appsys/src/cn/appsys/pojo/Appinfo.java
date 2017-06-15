@@ -26,7 +26,7 @@ public class Appinfo {
 	private int categoryLevel1;//所属一级分类
 	private int categoryLevel2;//所属二级分类
 	private String logoPicPath;//LOGO图片url路径
-	private String LocPath;//LOGO图片的服务器存储路径
+	private String logoLocPath;//LOGO图片的服务器存储路径
 	private int versionId;//最新的版本id
 	
 	private String flatformName;//手机，平板，通用
@@ -207,11 +207,11 @@ public class Appinfo {
 	public void setLogoPicPath(String logoPicPath) {
 		this.logoPicPath = logoPicPath;
 	}
-	public String getLocPath() {
-		return LocPath;
+	public String getLogoLocPath() {
+		return logoLocPath;
 	}
-	public void setLocPath(String locPath) {
-		LocPath = locPath;
+	public void setLogoLocPath(String logoLocPath) {
+		this.logoLocPath = logoLocPath;
 	}
 	public int getVersionId() {
 		return versionId;

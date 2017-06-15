@@ -22,12 +22,14 @@ import com.alibaba.fastjson.JSONArray;
 
 import cn.appsys.pojo.Appcategory;
 import cn.appsys.pojo.Appinfo;
+import cn.appsys.pojo.Appversion;
 import cn.appsys.pojo.Datadictionary;
 import cn.appsys.pojo.Devuser;
 
 
 import cn.appsys.service.AppCategoryService;
 import cn.appsys.service.AppinfoService;
+import cn.appsys.service.AppversionService;
 import cn.appsys.service.DataDictionaryService;
 import cn.appsys.service.DevUserService;
 @RequestMapping("/dev")
@@ -42,6 +44,8 @@ public class DevUserController {
 	DataDictionaryService dataDictionaryService;
 	@Autowired
 	AppCategoryService appCategoryService;
+	@Autowired
+	AppversionService appversionService;
 	//登录
 	@RequestMapping(value="/login.html",method=RequestMethod.GET)
 	public String login(){
@@ -56,7 +60,7 @@ public class DevUserController {
 			session.setAttribute("devUserSession",devUser);
 			return "developer/main";
 		}else{
-			request.setAttribute("error", "用户名或密码错误！");
+			request.setAttribute("error","用户名或密码错误！");
 			return "devlogin";
 		}
 	}
@@ -100,13 +104,11 @@ public class DevUserController {
 		appinfo.setCategoryLevel2(Integer.parseInt(queryCategoryLevel2));
 		appinfo.setCategoryLevel3(Integer.parseInt(queryCategoryLevel3));
 		
-		
-		
 		List<Appinfo> appInfoList = appinfoService.selectApplist(querySoftwareName, Integer.parseInt(queryStatus), Integer.parseInt(queryFlatformId), Integer.parseInt(queryCategoryLevel1),Integer.parseInt(queryCategoryLevel2),Integer.parseInt(queryCategoryLevel3),Integer.parseInt(pageIndex), 3);
 		
 		List<Datadictionary> statusList = dataDictionaryService.selectStatus();
 		List<Datadictionary> flatFormList = dataDictionaryService.selectFlatform();
-		List<Appcategory> categoryLevel1List = appCategoryService.selectFirst();
+		List<Appcategory> categoryLevel1List = appCategoryService.selectSecond(0);
 		int totalCount = appinfoService.selectCount(appinfo);
 
 		int totalPageCount = totalCount%3==0?totalCount/3:totalCount/3+1;
@@ -132,15 +134,20 @@ public class DevUserController {
 	//一级菜单
 		@RequestMapping(value = "/categorylevellistOne",produces="application/json;charset=utf-8")
 		@ResponseBody
-		public Object first(){
-			List<Appcategory> categoryLevel1List = appCategoryService.selectFirst();
+		public Object first(String pid){
+			if(pid==null || pid.equals("")){
+				pid = "0";
+			}
+			List<Appcategory> categoryLevel1List = appCategoryService.selectSecond(Integer.parseInt(pid));
 			return JSONArray.toJSONString(categoryLevel1List);
 		}
 	//二级菜单
 	@RequestMapping(value="/second",produces="application/json;charset=utf-8")
 	@ResponseBody
 	public Object second(String pid){
-		
+		if(pid==null || pid.equals("")){
+			pid = "0";
+		}
 		List<Appcategory> categoryLevel2List = appCategoryService.selectSecond(Integer.parseInt(pid));
 		
 		return JSONArray.toJSONString(categoryLevel2List);
@@ -239,8 +246,7 @@ public class DevUserController {
 		}else{
 			return "developer/appinfoadd";
 		}
-	}
-	
+	}	
 	//apkname验证
 	@RequestMapping(value="/apkexist")
 	@ResponseBody
@@ -276,10 +282,149 @@ public class DevUserController {
 			}else{
 				map.put("delResult", "false");
 			}
+		}	
+		return JSONArray.toJSONString(map);	
+	}
+	
+	
+	//修改app
+	@RequestMapping(value="/appinfomodify",method=RequestMethod.GET)
+	public String changeApp(HttpServletRequest request,String id){
+		Appinfo appinfo = appinfoService.selectToChange(Integer.parseInt(id));
+		request.setAttribute("appInfo",appinfo);
+		return "/developer/appinfomodify";
+	}
+	//修改页面
+	@RequestMapping(value="/appinfomodify",method=RequestMethod.POST)
+	public String editApp(Appinfo appinfo,HttpServletRequest request,
+			@RequestParam(value="a_logoPicPath",required=false) MultipartFile attach,HttpSession session){
+		
+		String idPicPath = null;
+		/*if(!attach.isEmpty()){
+				String path = request.getSession().getServletContext().getRealPath("statics"+File.separator+"uploadfiles");
+				String oldFileName = attach.getOriginalFilename();//原文件名
+				String prefix = FilenameUtils.getExtension(oldFileName);//原文件名后缀
+				
+				int filesize = 5000000;
+				System.out.println("++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++");
+				if(attach.getSize()>filesize){
+					request.setAttribute("fileUploadError","上传文件不得超过500k");
+					return "developer/appinfoadd";
+				}else if(prefix.equalsIgnoreCase("jpg") || prefix.equalsIgnoreCase("png") || prefix.equalsIgnoreCase("jpeg") || prefix.equalsIgnoreCase("pneg")){
+					String fileName = System.currentTimeMillis()+"_Personal.jpg";
+					File targetFile = new File(path,fileName);
+					if(!targetFile.exists()){
+						targetFile.mkdirs();
+					}
+						try {
+							attach.transferTo(targetFile);
+						} catch (IllegalStateException | IOException e) {
+							e.printStackTrace();
+							request.setAttribute("fileUploadError","*上传失败");
+							return "developer/appinfoadd";
+						}
+					idPicPath = path +File.separator+fileName;
+				}else{
+					request.setAttribute("fileUploadError","*上传文件格式不正确");
+					return "developer/appinfoadd";
+				}
+			}*/
+		
+		Devuser devuser = (Devuser)session.getAttribute("devUserSession");
+		appinfo.setModifyBy(devuser.getId());
+		appinfo.setModifyDate(new Date());
+		appinfo.setLogoPicPath(idPicPath);
+		appinfo.setStatus(1);
+		boolean flag = appinfoService.editappinfo(appinfo);
+		if(flag){
+			return "redirect:list";
+		}else{
+			return "developer/appinfomodify";
+		}
+	}
+	
+	//新增版本
+	@RequestMapping(value="/appversionadd",method=RequestMethod.GET)
+	public String addVersion(HttpServletRequest request,String id){
+		Map<String, String> m = new HashMap<String, String>();
+		m.put("appId", id);
+		request.setAttribute("appVersion", m);
+		List<Appversion> appVersionList= appversionService.selectVersion(Integer.parseInt(id));
+		
+		request.setAttribute("appVersionList",appVersionList);
+		return "/developer/appversionadd";
+	}
+	
+	@RequestMapping(value="/appversionadd",method=RequestMethod.POST)
+	public String versionAdd(HttpServletRequest request,Appversion appversion,HttpSession session,
+						
+							 @RequestParam(value="a_downloadLink",required=false) MultipartFile attach){
+		
+		
+		String idPicPath=null;
+		if(!attach.isEmpty()){
+			String path = request.getSession().getServletContext().getRealPath("statics"+File.separator+"uploadfiles");
+			String oldFileName = attach.getOriginalFilename();//原文件名
+			String prefix = FilenameUtils.getExtension(oldFileName);//原文件名后缀
+			
+			int filesize = 5000000;
+			
+			if(attach.getSize()>filesize){
+				request.setAttribute("fileUploadError","上传文件不得超过500k");
+				return "developer/appversionadd";
+			}else if(prefix.equalsIgnoreCase("jpg") || prefix.equalsIgnoreCase("png") || prefix.equalsIgnoreCase("jpeg") || prefix.equalsIgnoreCase("pneg")){
+				String fileName = System.currentTimeMillis()+"_Personal.jpg";
+				File targetFile = new File(path,fileName);
+				if(!targetFile.exists()){
+					targetFile.mkdirs();
+				}
+					try {
+						attach.transferTo(targetFile);
+					} catch (IllegalStateException | IOException e) {
+						e.printStackTrace();
+						request.setAttribute("fileUploadError","*上传失败");
+						return "developer/appversionadd";
+					}
+				idPicPath = path +File.separator+fileName;
+			}else{
+				request.setAttribute("fileUploadError","*上传文件格式不正确");
+				return "developer/appversionadd";
+			}
+		}
+		Devuser devuser = (Devuser)session.getAttribute("devUserSession");
+		appversion.setCreatedBy(devuser.getId());
+		appversion.setCreationDate(new Date());
+		appversion.setApkFileName(idPicPath);
+		appversion.setPublishStatus(3);
+		boolean flag = appversionService.addVersion(appversion);
+		if(flag){
+			Appinfo appinfo = new Appinfo();
+			appinfo.setModifyBy(devuser.getId());
+			appinfo.setModifyDate(new Date());
+			
+			int versionId = appversionService.selectId();
+			appinfo.setVersionId(versionId);
+			appinfo.setId(appversion.getAppId());
+			boolean result = appinfoService.changeVersionId(appinfo);
+			if(result){
+				return "redirect:list";
+			}else{
+				return "/developer/appversionadd";
+			}
+			
+		}else{
+			return "/developer/appversionadd";
 		}
 		
-		return JSONArray.toJSONString(map);
 		
 	}
 	
+	
+	//修改版本
+	@RequestMapping(value="/appversionmodify",method=RequestMethod.GET)
+	public String changeVersion(HttpServletRequest request,String vid,String aid){
+		List<Appversion> appVersionList= appversionService.selectVersion(Integer.parseInt(aid));
+		request.setAttribute("appVersionList",appVersionList );
+		return "developer/appversionmodify";
+	}
 }

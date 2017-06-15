@@ -68,4 +68,28 @@ public class AppinfoServiceImpl implements AppinfoService {
 		}	
 	}
 
+	@Override
+	public Appinfo selectToChange(int id) {
+		return appinfoMapper.selectAppByid(id);
+	}
+
+	@Override
+	public boolean editappinfo(Appinfo appinfo) {
+		int row = appinfoMapper.editappinfo(appinfo);
+		if(row ==1){
+			return true;
+		}else{
+			return false;
+		}
+	}
+
+	@Override
+	public boolean changeVersionId(Appinfo appinfo) {
+		int row =appinfoMapper.changeVersionId(appinfo);
+		if(row ==1){
+			return true;
+		}else{
+			return false;
+		}
+	}
 }

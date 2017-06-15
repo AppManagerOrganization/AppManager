@@ -3,6 +3,7 @@ package cn.appsys.pojo;
 import java.math.BigDecimal;
 import java.util.Date;
 
+
 public class Appversion {
 	private int id;
 	private int appId;
@@ -17,6 +18,30 @@ public class Appversion {
 	private Date modifyDate;
 	private String apkLocPath;//apk文件的服务器存储路径
 	private String apkFileName;//上传的apk文件名称
+	
+	private int AppinfoId;
+	private String appName;
+	private String publishStatusName;
+	public int getAppinfoId() {
+		return AppinfoId;
+	}
+	public void setAppinfoId(int appinfoId) {
+		AppinfoId = appinfoId;
+	}
+	
+	public String getAppName() {
+		return appName;
+	}
+	public void setAppName(String appName) {
+		this.appName = appName;
+	}
+	
+	public String getPublishStatusName() {
+		return publishStatusName;
+	}
+	public void setPublishStatusName(String publishStatusName) {
+		this.publishStatusName = publishStatusName;
+	}
 	public int getId() {
 		return id;
 	}

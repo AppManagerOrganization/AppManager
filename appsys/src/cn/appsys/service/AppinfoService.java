@@ -19,4 +19,10 @@ public interface AppinfoService {
 	public boolean deleteApp(int id);
 	
 	public boolean selectById(int id);
+	
+	public Appinfo selectToChange(int id);
+	
+	public boolean editappinfo(Appinfo appinfo);
+	
+	public boolean changeVersionId(Appinfo appinfo);
 }

@@ -3,7 +3,7 @@
 <mapper namespace="cn.appsys.dao.AppCategoryMapper">
  
 	<select id="selectFirst" resultType="Appcategory">
-		SELECT id,categoryName,parentId FROM app_category WHERE parentId IS NULL
+		SELECT id,categoryName,parentId FROM app_category WHERE parentId = '0'
 	</select>
 	
 	<select id="selectSecond" resultType="Appcategory">

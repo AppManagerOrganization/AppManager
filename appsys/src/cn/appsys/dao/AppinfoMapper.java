@@ -19,4 +19,8 @@ public interface AppinfoMapper {
 	public int deleteApp(@Param("id") int id);
 	
 	public Appinfo selectById(@Param("id") int id);
+	
+	public int editappinfo(Appinfo appinfo);
+	
+	public int changeVersionId(Appinfo appinfo);
 }
