@@ -1,5 +1,6 @@
 package cn.appsys.service;
 
+import java.util.Date;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -86,6 +87,26 @@ public class AppinfoServiceImpl implements AppinfoService {
 	@Override
 	public boolean changeVersionId(Appinfo appinfo) {
 		int row =appinfoMapper.changeVersionId(appinfo);
+		if(row ==1){
+			return true;
+		}else{
+			return false;
+		}
+	}
+
+	@Override
+	public boolean onsale(int id,Date onSaleDate) {
+		int row = appinfoMapper.onsale(id,onSaleDate);
+		if(row ==1){
+			return true;
+		}else{
+			return false;
+		}
+	}
+
+	@Override
+	public boolean offsale(int id,Date offSaleDate) {
+		int row = appinfoMapper.offsale(id,offSaleDate);
 		if(row ==1){
 			return true;
 		}else{

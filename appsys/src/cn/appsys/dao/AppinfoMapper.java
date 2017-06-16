@@ -1,5 +1,6 @@
 package cn.appsys.dao;
 
+import java.util.Date;
 import java.util.List;
 import org.apache.ibatis.annotations.Param;
 
@@ -23,4 +24,8 @@ public interface AppinfoMapper {
 	public int editappinfo(Appinfo appinfo);
 	
 	public int changeVersionId(Appinfo appinfo);
+	
+	public int onsale(@Param("id") int id,@Param("onSaleDate") Date onSaleDate);
+	
+	public int offsale(@Param("id") int id,@Param("offSaleDate") Date offSaleDate);
 }

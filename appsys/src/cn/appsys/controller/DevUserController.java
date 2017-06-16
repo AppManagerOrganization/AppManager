@@ -117,7 +117,6 @@ public class DevUserController {
 		map.put("totalPageCount", totalPageCount);
 		map.put("totalCount", totalCount);
 		request.setAttribute("pages", map);
-		request.setAttribute("pages",map);
 		request.setAttribute("appInfoList",appInfoList);
 		request.setAttribute("categoryLevel1List",categoryLevel1List);
 		request.setAttribute("statusList",statusList);
@@ -236,7 +235,7 @@ public class DevUserController {
 		appinfo.setCategoryLevel2(Integer.parseInt(categoryLevel2));
 		appinfo.setCategoryLevel3(Integer.parseInt(categoryLevel3));
 		appinfo.setAppInfo(appInfo);
-		appinfo.setLogoPicPath(idPicPath);
+		appinfo.setLogoLocPath(idPicPath);
 		appinfo.setVersionId(41);
 		appinfo.setStatus(1);
 		boolean flag= appinfoService.addapp(appinfo);
@@ -350,17 +349,13 @@ public class DevUserController {
 		m.put("appId", id);
 		request.setAttribute("appVersion", m);
 		List<Appversion> appVersionList= appversionService.selectVersion(Integer.parseInt(id));
-		
 		request.setAttribute("appVersionList",appVersionList);
 		return "/developer/appversionadd";
 	}
 	
 	@RequestMapping(value="/appversionadd",method=RequestMethod.POST)
 	public String versionAdd(HttpServletRequest request,Appversion appversion,HttpSession session,
-						
 							 @RequestParam(value="a_downloadLink",required=false) MultipartFile attach){
-		
-		
 		String idPicPath=null;
 		if(!attach.isEmpty()){
 			String path = request.getSession().getServletContext().getRealPath("statics"+File.separator+"uploadfiles");
@@ -401,7 +396,6 @@ public class DevUserController {
 			Appinfo appinfo = new Appinfo();
 			appinfo.setModifyBy(devuser.getId());
 			appinfo.setModifyDate(new Date());
-			
 			int versionId = appversionService.selectId();
 			appinfo.setVersionId(versionId);
 			appinfo.setId(appversion.getAppId());
@@ -411,20 +405,104 @@ public class DevUserController {
 			}else{
 				return "/developer/appversionadd";
 			}
-			
 		}else{
 			return "/developer/appversionadd";
 		}
-		
-		
 	}
-	
-	
 	//修改版本
 	@RequestMapping(value="/appversionmodify",method=RequestMethod.GET)
-	public String changeVersion(HttpServletRequest request,String vid,String aid){
+	public String changeVersion(HttpServletRequest request,String vid,String aid,HttpSession session){
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("id",vid);
+		map.put("appId",aid);
+		Appversion appversion = appversionService.selectVersionByAid(Integer.parseInt(aid));
+
+		map.put("versionNo",appversion.getVersionNo());
+		map.put("versionSize",appversion.getVersionSize());
+		map.put("versionInfo",appversion.getVersionInfo());
+		map.put("downloadLink",appversion.getDownloadLink() );
+		map.put("apkLocPath", appversion.getApkLocPath());
+		map.put("apkFileName", appversion.getApkFileName());
+		session.setAttribute("Appver",appversion );
+		request.setAttribute("appVersion",map);
+		
 		List<Appversion> appVersionList= appversionService.selectVersion(Integer.parseInt(aid));
 		request.setAttribute("appVersionList",appVersionList );
 		return "developer/appversionmodify";
 	}
+	//修改提交页面
+	@RequestMapping(value="/appversionmodify",method=RequestMethod.POST)
+	public String editVersion(HttpServletRequest request,Appversion appversion,
+			@RequestParam(value="attach",required=false) MultipartFile attach,
+			@RequestParam String appId,
+			HttpSession session){
+		/*String idPicPath=null;*/
+		/*if(!attach.isEmpty()){
+			String path = request.getSession().getServletContext().getRealPath("statics"+File.separator+"uploadfiles");
+			String oldFileName = attach.getOriginalFilename();//原文件名
+			String prefix = FilenameUtils.getExtension(oldFileName);//原文件名后缀
+			
+			int filesize = 5000000;
+			
+			if(attach.getSize()>filesize){
+				request.setAttribute("fileUploadError","上传文件不得超过500k");
+				return "developer/appversionmodify";
+			}else if(prefix.equalsIgnoreCase("jpg") || prefix.equalsIgnoreCase("png") || prefix.equalsIgnoreCase("jpeg") || prefix.equalsIgnoreCase("pneg")){
+				String fileName = System.currentTimeMillis()+"_Personal.jpg";
+				File targetFile = new File(path,fileName);
+				if(!targetFile.exists()){
+					targetFile.mkdirs();
+				}
+					try {
+						attach.transferTo(targetFile);
+					} catch (IllegalStateException | IOException e) {
+						e.printStackTrace();
+						request.setAttribute("fileUploadError","*上传失败");
+						return "developer/appversionmodify";
+					}
+				idPicPath = path +File.separator+fileName;
+			}else{
+				request.setAttribute("fileUploadError","*上传文件格式不正确");
+				return "developer/appversionmodify";
+			}	
+		}*/
+		Appversion appver = (Appversion)session.getAttribute("Appver");
+		Devuser devuser = (Devuser)session.getAttribute("devUserSession");
+		appversion.setModifyBy(devuser.getId());
+		appversion.setModifyDate(new Date());
+		appversion.setId(appver.getId());
+		boolean flag = appversionService.changeVersion(appversion);
+		if(flag){
+			return "redirect:list";
+		}else{
+			return "redirect:appversionmodify";
+		}
+	}
+	
+	//上下架
+	@RequestMapping(value="{appId}/{saleSwitch}/sale")
+	@ResponseBody
+	public Object sale(@PathVariable String appId,@PathVariable String saleSwitch){
+		HashMap<String, String> map = new HashMap<String, String>();
+		if(saleSwitch.equals("open")){
+			boolean flag = appinfoService.onsale(Integer.parseInt(appId),new Date());
+			if(flag){
+				map.put("errorCode","0");
+				map.put("resultMsg", "success");
+			}else{
+				map.put("resultMsg","failed");
+			}
+		}else if(saleSwitch.equals("close")){
+			boolean result = appinfoService.offsale(Integer.parseInt(appId),new Date());
+			if(result){
+				map.put("errorCode","0");
+				map.put("resultMsg", "success");
+			}else{
+				map.put("resultMsg","failed");
+			}
+		}
+		return JSONArray.toJSONString(map);
+	}
+	
+	
 }

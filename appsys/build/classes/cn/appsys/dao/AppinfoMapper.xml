@@ -1,6 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="cn.appsys.dao.AppinfoMapper">
+
+	<!-- 查询列表 -->
 	<select id="selectApplist" resultType="Appinfo">		
 		SELECT app_info.id AS id,softwareName,APKName,softwareSize ,data_one.valueName as flatformName,STATUS,
 		data_two.valueName AS statusName,categoryLevel1,app_one.categoryName AS categoryLevel1Name,
@@ -41,7 +43,7 @@
 		       limit #{index},#{pageSize}
 	</select>
 	
-	
+	<!-- 查询记录数 -->
 	<select id="selectCount" resultType="int">
 		SELECT COUNT(1) FROM app_info
 		INNER JOIN data_dictionary AS data_one ON data_one.valueId = app_info.flatformId
@@ -91,11 +93,11 @@
 	<insert id="addApp" parameterType="Appinfo">
 		INSERT INTO app_info (softwareName,APKName,supportROM,interfaceLanguage,
 		softwareSize,downloads,flatformId,status,categoryLevel1,categoryLevel2,categoryLevel3,devId,createdBy,creationDate,
-		appInfo,logoPicPath,versionId)
+		appInfo,logoLocPath,versionId)
 		VALUES 
 		(#{softwareName},#{APKName},#{supportROM},#{interfaceLanguage},
 		#{softwareSize},#{downloads},#{flatformId},#{status},#{categoryLevel1},#{categoryLevel2},
-		#{categoryLevel3},#{devId},#{createdBy},#{creationDate},#{appInfo},#{logoPicPath},#{versionId})
+		#{categoryLevel3},#{devId},#{createdBy},#{creationDate},#{appInfo},#{logoLocPath},#{versionId})
 	
 	</insert>
 	
@@ -171,5 +173,15 @@
 	    	id =#{id} ;
 	</update>
 
+	<!-- 上架 -->
+	<update id="onsale">
+		UPDATE app_info SET STATUS=4,onSaleDate=#{onSaleDate} WHERE id =#{id}
+	</update>
+	
+	
+	<!-- 下架 -->
+	<update id="offsale" parameterType="int">
+		UPDATE app_info SET STATUS=5,offSaleDate=#{offSaleDate} WHERE id =#{id}
+	</update>
 
 </mapper>

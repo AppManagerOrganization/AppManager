@@ -73,7 +73,7 @@ $(".modifyVersion").on("click",function(){
 	var status = obj.attr("status");
 	var versionid = obj.attr("versionid");
 	var appinfoid = obj.attr("appinfoid");
-	alert(appinfoid);
+	
 	if(status == "1" || status == "3"){//待审核、审核未通过状态下才可以进行修改操作
 		if(versionid == null || versionid == ""){
 			alert("该APP应用无版本信息，请先增加版本信息！");
@@ -110,7 +110,7 @@ $(document).on("click",".saleSwichOpen,.saleSwichClose",function(){
 var saleSwitchAjax = function(appId,obj){
 	$.ajax({
 		type:"PUT",
-		url:appId+"/sale.json",
+		url:appId+"/"+obj.attr("saleSwitch")+"/sale",
 		dataType:"json",
 		success:function(data){
 			/*

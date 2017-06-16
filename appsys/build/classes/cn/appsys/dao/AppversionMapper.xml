@@ -26,5 +26,19 @@
 	<select id="selectId" resultType="int" >
 		SELECT LAST_INSERT_ID();
 	</select>
+	
+	<update id="changeVersion" parameterType="Appversion">
+		UPDATE app_version SET versionSize =#{versionSize},
+		modifyBy=#{modifyBy} ,modifyDate=#{modifyDate},
+		versionInfo =#{versionInfo} WHERE id= #{id}		
+	</update>
+	
+	
+	<select id="selectVersionByAid" resultType="Appversion"  parameterType="int">
+		SELECT versionNo,app_version.id,versionSize,versionInfo,downloadLink,apkLocPath,
+		apkFileName FROM app_version 
+		INNER JOIN app_info ON app_info.versionId = app_version.id
+		WHERE app_info.id = #{id}
+	</select>
 
 </mapper>

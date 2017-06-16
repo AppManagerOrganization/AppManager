@@ -12,4 +12,8 @@ public interface AppversionMapper {
 	public int addVersion(Appversion appversion);
 	
 	public int selectId();
+	
+	public int changeVersion(Appversion appversion);
+	
+	public Appversion selectVersionByAid(@Param("id") int id);
 }

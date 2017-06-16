@@ -32,6 +32,21 @@ public class AppversionServiceImpl implements AppversionService {
 		return appversionMapper.selectId();
 	}
 
+	@Override
+	public boolean changeVersion(Appversion appversion) {
+		int row = appversionMapper.changeVersion(appversion);
+		if(row ==1){
+			return true;
+		}else{
+			return false;
+		}	
+	}
+
+	@Override
+	public Appversion selectVersionByAid(int id) {
+		return appversionMapper.selectVersionByAid(id);
+	}
+
 	
 
 }

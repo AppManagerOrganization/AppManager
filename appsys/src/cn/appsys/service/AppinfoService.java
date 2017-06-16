@@ -1,7 +1,7 @@
 package cn.appsys.service;
 
+import java.util.Date;
 import java.util.List;
-
 
 import cn.appsys.pojo.Appinfo;
 
@@ -25,4 +25,8 @@ public interface AppinfoService {
 	public boolean editappinfo(Appinfo appinfo);
 	
 	public boolean changeVersionId(Appinfo appinfo);
+	
+	public boolean onsale(int id,Date onSaleDate);
+	
+	public boolean offsale(int id,Date offSaleDate);
 }

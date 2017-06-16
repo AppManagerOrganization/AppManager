@@ -52,7 +52,7 @@
 						<div class="clearfix"></div>
 						<div class="separator">
 							<div>
-								<p>?2016 All Rights Reserved.</p>
+								<p>&copy;2016 All Rights Reserved.</p>
 							</div>
 						</div>
 					</form>
