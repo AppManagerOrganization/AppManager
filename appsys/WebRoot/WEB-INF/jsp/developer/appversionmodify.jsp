@@ -129,6 +129,7 @@
             <input type="hidden" id="apkFileName" name="apkFileName" value="${appVersion.apkFileName}"/>
 			<div id="uploadfile" style="display: none">
 				<input id="attach" type="file" class="form-control col-md-7 col-xs-12" name="attach">
+				<input type="hidden" id="hid_logoPicPath" name="hid_logoPicPath">
 				<p><span style="color:red;font-weight: bold;">*注：1、大小不得超过500m.2、文件类型：apk</span></p>
 			</div>
 			<div id="apkFile"></div>
@@ -138,8 +139,18 @@
           <div class="ln_solid"></div>
           <div class="form-group">
             <div class="col-md-6 col-md-offset-3">
-              <button id="send" type="submit" class="btn btn-success">保存</button>
+              <button id="send" type="submit" onclick="getPath()" class="btn btn-success">保存</button>
               <button type="button" class="btn btn-primary" id="back">返回</button>
+            	 <script type="text/javascript">
+              
+              	function getPath(){
+              		 document.getElementById("hid_logoPicPath").value  = document.getElementById("attach").value;
+              		 //alert(document.getElementById("hid_logoPicPath").value);
+              		 return true;
+              	}
+              </script>
+              
+            
             </div>
           </div>
           <div class="clearfix"></div>

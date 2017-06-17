@@ -113,4 +113,36 @@ public class AppinfoServiceImpl implements AppinfoService {
 			return false;
 		}
 	}
+
+	@Override
+	public List<Appinfo> selectCheckApplist(String softwareName, int status,
+			int flatformId, int categoryLevel1, int categoryLevel2,
+			int categoryLevel3, int index, int pageSize) {
+		return appinfoMapper.selectCheckApplist(softwareName, status, flatformId, categoryLevel1, categoryLevel2, categoryLevel3, (index-1)*pageSize, pageSize)
+				;
+	}
+
+	@Override
+	public int selectCheckCount(Appinfo appinfo) {
+		return appinfoMapper.selectCheckCount(appinfo);
+	}
+
+	@Override
+	public Appinfo selectToCheck(int id) {
+		return appinfoMapper.selectToCheck(id);
+	}
+
+	@Override
+	public boolean checksave(Appinfo appinfo) {
+		int row = appinfoMapper.checksave(appinfo);
+		if(row ==1){
+			return true;
+		}else{
+			return false;
+		}
+	}
+
+	
+
+	
 }

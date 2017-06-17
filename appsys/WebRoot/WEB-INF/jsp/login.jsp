@@ -44,7 +44,7 @@
 					<form>
 						<h1>APP信息管理平台</h1>
 						<h3>
-							<a style="color:red" href="manager/login.html">后台管理系统入口</a>
+							<a style="color:blue" href="manager/login.html">后台管理系统入口</a>
 						</h3>
 						<h3>
 							<a style="color:blue" href="dev/login.html">开发者平台入口</a>

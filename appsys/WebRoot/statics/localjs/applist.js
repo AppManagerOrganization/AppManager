@@ -2,7 +2,6 @@ $("#queryCategoryLevel1").change(function(){
 	var queryCategoryLevel1 = $("#queryCategoryLevel1").val();
 	if(queryCategoryLevel1 != '' && queryCategoryLevel1 != null){
 		$.ajax({
-			
 			type:"GET",//请求类型
 			url:"categorylevellist",//请求的url
 			data:{pid:queryCategoryLevel1},//请求参数
@@ -70,6 +69,7 @@ $(".checkApp").on("click",function(){
 		alert("该APP应用的状态为：【"+obj.attr("statusname")+"】,不能进行审核操作！");
 	}
 });
+
 
 
 

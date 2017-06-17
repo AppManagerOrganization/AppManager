@@ -2,43 +2,63 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
 <mapper namespace="cn.appsys.dao.AppversionMapper">
+
+         <!--  获取版本列表 -->
 	<select id="selectVersion" resultType="Appversion">
 		SELECT app_info.id as AppinfoId,softwareName as appName,versionNo,publishStatus,versionSize,
-		valueName as publishStatusName,downloadLink,apkFileName,app_version.modifyDate as modifyDate FROM 
+		valueName as publishStatusName,downloadLink,apkFileName,app_version.modifyDate as modifyDate,versionId FROM 
 		app_version INNER JOIN app_info ON app_info.id = app_version.appId
 		INNER JOIN data_dictionary ON app_version.publishStatus = data_dictionary.valueId 
-		WHERE typeName='发布状态' and app_info.id=#{id}
+		WHERE typeName='发布状态' and appId=#{appId}
 	</select>
 	
 	
-	
+	<!-- 添加版本 -->
 	<insert id="addVersion" parameterType="Appversion">
 		INSERT INTO app_version 
 		(appId,versionNo, versionInfo, publishStatus, versionSize, 
-		createdBy , creationDate, apkLocPath 
+		createdBy , creationDate, apkLocPath ,downloadLink,apkFileName
 		)
 		VALUES
 		(#{appId},#{versionNo},#{versionInfo},#{publishStatus},#{versionSize},
-		 #{createdBy},#{creationDate},#{apkLocPath})
+		 #{createdBy},#{creationDate},#{apkLocPath},#{downloadLink},#{apkFileName})
 		 
 	</insert>
-	
+	<!-- 查找最新增加的id -->
 	<select id="selectId" resultType="int" >
 		SELECT LAST_INSERT_ID();
 	</select>
-	
+	<!-- 修改版本信息 -->
 	<update id="changeVersion" parameterType="Appversion">
-		UPDATE app_version SET versionSize =#{versionSize},
-		modifyBy=#{modifyBy} ,modifyDate=#{modifyDate},
-		versionInfo =#{versionInfo} WHERE id= #{id}		
-	</update>
+		UPDATE appinfodb.app_version 
+			SET
+	versionNo = #{versionNo} , 
+	versionInfo = #{versionInfo} , 
+	publishStatus = 3 , 
+	downloadLink = #{downloadLink} , 
+	versionSize = #{versionSize} , 
+	modifyDate = #{modifyDate} , 
+	apkLocPath = #{apkLocPath} , 
+	apkFileName = #{apkFileName}
+	
+	WHERE
+	id = #{id} AND appid=#{appId}
+	</update>	
 	
 	
+	<!-- 通过appId获取版本 -->
 	<select id="selectVersionByAid" resultType="Appversion"  parameterType="int">
 		SELECT versionNo,app_version.id,versionSize,versionInfo,downloadLink,apkLocPath,
 		apkFileName FROM app_version 
 		INNER JOIN app_info ON app_info.versionId = app_version.id
 		WHERE app_info.id = #{id}
+	</select>
+	
+	
+	
+	<!-- 审核页面版本信息 -->
+	<select id="selectVersionCheck" resultType="Appversion" parameterType="int">
+			SELECT versionNo,versionSize,versionInfo ,apkFileName,downloadLink FROM app_version WHERE id=#{id}
 	</select>
 
 </mapper>

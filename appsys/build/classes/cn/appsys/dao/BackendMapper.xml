@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="cn.appsys.dao.BackendMapper">
-	
+	<!-- admin登录 -->
 	<select id="selectToLogin" resultType="Backenduser">
 		SELECT  backend_user.id,userCode,userName,userType,valueName AS userTypeName FROM backend_user
 			INNER JOIN data_dictionary ON backend_user.userType = data_dictionary.valueId

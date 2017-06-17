@@ -10,7 +10,7 @@ import cn.appsys.pojo.Datadictionary;
 @Service("dataDictionaryService")
 public class DataDictionaryServiceImpl implements DataDictionaryService {
 	@Autowired
-	DataDictionaryMapper dataDictionaryMapper;
+	public DataDictionaryMapper dataDictionaryMapper;
 	@Override
 	public List<Datadictionary> selectStatus() {
 		return dataDictionaryMapper.selectStatus();

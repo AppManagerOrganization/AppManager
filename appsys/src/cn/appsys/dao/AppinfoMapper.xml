@@ -6,7 +6,7 @@
 	<select id="selectApplist" resultType="Appinfo">		
 		SELECT app_info.id AS id,softwareName,APKName,softwareSize ,data_one.valueName as flatformName,STATUS,
 		data_two.valueName AS statusName,categoryLevel1,app_one.categoryName AS categoryLevel1Name,
-		categoryLevel2,app_two.categoryName AS categoryLevel2Name ,categoryLevel3,
+		categoryLevel2,app_two.categoryName AS categoryLevel2Name ,categoryLevel3,versionId,
 		app_three.categoryName AS categoryLevel3Name,versionNo,downloads FROM app_info
 		INNER JOIN data_dictionary AS data_one ON data_one.valueId = app_info.flatformId
 		INNER JOIN data_dictionary AS data_two ON data_two.valueId = app_info.status
@@ -40,7 +40,7 @@
 			</if>
 		
 		 
-		       limit #{index},#{pageSize}
+		      ORDER BY app_info.creationDate DESC limit #{index},#{pageSize}  
 	</select>
 	
 	<!-- 查询记录数 -->
@@ -77,10 +77,10 @@
 				and categoryLevel3 = #{categoryLevel3}
 			</if>
 	</select>
-	
+	<!-- 通过id得到app信息 -->
 	<select id="selectAppByid" resultType="Appinfo" parameterType="int">
 		SELECT app_info.id,softwareName,APKName,supportROM,interfaceLanguage,softwareSize,flatformId,downloads,data_one.valueName as flatformName,STATUS,data_two.valueName AS statusName,categoryLevel1,app_one.categoryName AS categoryLevel1Name,
-		categoryLevel2,app_two.categoryName AS categoryLevel2Name ,categoryLevel3,app_three.categoryName AS categoryLevel3Name,appInfo FROM app_info 
+		categoryLevel2,app_two.categoryName AS categoryLevel2Name ,categoryLevel3,app_three.categoryName AS categoryLevel3Name,appInfo,logoPicPath FROM app_info 
 		INNER JOIN data_dictionary AS data_one ON data_one.valueId = app_info.flatformId
 		INNER JOIN data_dictionary AS data_two ON data_two.valueId = app_info.status
 		INNER JOIN app_category AS app_one ON app_one.id = app_info.categoryLevel1
@@ -89,83 +89,56 @@
 		WHERE data_one.typeName ='所属平台' AND data_two.typeName='APP状态' AND app_info.id =#{id}
 	</select>
 	
-	
+	<!-- 添加app -->
 	<insert id="addApp" parameterType="Appinfo">
 		INSERT INTO app_info (softwareName,APKName,supportROM,interfaceLanguage,
 		softwareSize,downloads,flatformId,status,categoryLevel1,categoryLevel2,categoryLevel3,devId,createdBy,creationDate,
-		appInfo,logoLocPath,versionId)
+		appInfo,logoLocPath,logoPicPath,versionId)
 		VALUES 
 		(#{softwareName},#{APKName},#{supportROM},#{interfaceLanguage},
 		#{softwareSize},#{downloads},#{flatformId},#{status},#{categoryLevel1},#{categoryLevel2},
-		#{categoryLevel3},#{devId},#{createdBy},#{creationDate},#{appInfo},#{logoLocPath},#{versionId})
+		#{categoryLevel3},#{devId},#{createdBy},#{creationDate},#{appInfo},#{logoLocPath},#{logoPicPath},#{versionId})
 	
 	</insert>
 	
-	
+	<!-- 通过apkName得到app信息 -->
 	<select id="selectByAPKName" resultType="Appinfo">
 		SELECT * FROM app_info WHERE APKName =#{APKName}
 	</select>
-	
+	<!-- 通过id得到app信息 -->
 	<select id="selectById" resultType="Appinfo" parameterType="int">
 		select  * from app_info where id = #{id}
 	</select>
-	
+	<!-- 删除app -->
 	<delete id="deleteApp" parameterType="int">
 		DELETE FROM app_info 
 		WHERE
 		id = #{id};
 	</delete>
 	
-	
+	<!-- 修改app -->
 	<update id="editappinfo" parameterType="Appinfo">
-		UPDATE app_info 
-		<set>
-			<if test="softwareName!=null and softwareName!=''">
-				softwareName=#{softwareName},
-			</if>
-			
-			<if test="supportROM!=null and supportROM!=''">
-				supportROM=#{supportROM},
-			</if>
-			<if test="interfaceLanguage!=null and interfaceLanguage!=''">
-				interfaceLanguage=#{interfaceLanguage},
-			</if>
-			<if test="softwareSize!=0">
-				softwareSize=#{softwareSize},
-			</if>
-			<if test="downloads!=0">
-				downloads=#{downloads},
-			</if>
-			<if test="flatformId!=0">
-				flatformId=#{flatformId},
-			</if>
-			<if test="categoryLevel1!=0">
-				categoryLevel1=#{categoryLevel1},
-			</if>
-			<if test="categoryLevel2!=0">
-				categoryLevel2=#{categoryLevel2},
-			</if>
-			<if test="categoryLevel3!=0">
-				categoryLevel3=#{categoryLevel3},
-			</if>
-			
-			<if test="appInfo!=null and appInfo!=''">
-				appInfo=#{appInfo},
-			</if>
-			<if test="logoPicPath!=null and logoPicPath!=''">
-				logoPicPath=#{logoPicPath},
-			</if>
-			
-			<if test="modifyBy!=0">
-				modifyBy=#{modifyBy},modifyDate=#{modifyDate}
-			</if>
-			
-			
-		</set>
-		
-		where id=#{id}
-	</update>
 	
+		UPDATE  appinfodb.app_info  SET	 
+			softwareName = #{softwareName} , 
+			
+			supportROM = #{supportROM} ,   
+			interfaceLanguage = #{interfaceLanguage} ,  
+			softwareSize = #{softwareSize} ,
+			downloads = #{downloads}  ,
+			flatformId = #{flatformId} ,  
+			categoryLevel1 = #{categoryLevel1} ,  
+			categoryLevel2 = #{categoryLevel2} ,  
+			categoryLevel3 = #{categoryLevel3} ,  
+			 STATUS = 1 ,
+			appInfo = #{appInfo} ,  
+			logoPicPath = #{logoPicPath} ,  
+			logoLocPath = #{logoLocPath} ,  
+			modifyDate = #{modifyDate} 
+			
+			WHERE id = #{id} 
+	</update>
+	<!-- 修改app版本信息 -->
 	<update id="changeVersionId" parameterType="Appinfo">
 		UPDATE appinfodb.app_info 
 			SET modifyBy = #{modifyBy},  modifyDate = #{modifyDate} ,  versionId =#{versionId}
@@ -183,5 +156,110 @@
 	<update id="offsale" parameterType="int">
 		UPDATE app_info SET STATUS=5,offSaleDate=#{offSaleDate} WHERE id =#{id}
 	</update>
+	
+	
+	
+	<!-- 审核 -->
+	<select id="selectCheckApplist" resultType="Appinfo">		
+		SELECT app_info.id AS id,softwareName,APKName,softwareSize ,data_one.valueName AS flatformName,STATUS,
+		data_two.valueName AS statusName,categoryLevel1,app_one.categoryName AS categoryLevel1Name,
+		categoryLevel2,app_two.categoryName AS categoryLevel2Name ,categoryLevel3,versionId,
+		app_three.categoryName AS categoryLevel3Name,versionNo,downloads FROM app_info
+		INNER JOIN data_dictionary AS data_one ON data_one.valueId = app_info.flatformId
+		INNER JOIN data_dictionary AS data_two ON data_two.valueId = app_info.status
+		INNER JOIN app_category AS app_one ON app_one.id = app_info.categoryLevel1
+		INNER JOIN app_category AS  app_two ON app_two.id = app_info.categoryLevel2
+		INNER JOIN app_category AS app_three ON app_three.id = app_info.categoryLevel3
+		INNER JOIN app_version ON app_version.id = app_info.versionId
+		WHERE data_one.typeName ='所属平台' AND data_two.typeName='APP状态'
+		AND data_two.valueId != 2  ORDER BY app_info.creationDate DESC
+			<if test="softwareName!=null and softwareName !=''">
+				and softwareName like concat('%',#{softwareName},'%') 	
+			</if>
+			
+			<if test="status !=0">
+				and status = #{status}
+			</if>
+			
+			<if test="flatformId !=0">
+				and flatformId = #{flatformId}
+			</if>
+			
+			<if test="categoryLevel1 !=0">
+				and categoryLevel1 = #{categoryLevel1}
+			</if>
+			
+			<if test="categoryLevel2 !=0">
+				and categoryLevel2 = #{categoryLevel2}
+			</if>
+			
+			<if test="categoryLevel3 !=0">
+				and categoryLevel3 = #{categoryLevel3}
+			</if>
+		
+		 
+		       limit #{index},#{pageSize}
+	</select>
+	
+	
+	<!-- 审核分页 记录数-->
+	
+	<select id="selectCheckCount" resultType="int">
+		SELECT COUNT(1) FROM app_info
+		INNER JOIN data_dictionary AS data_one ON data_one.valueId = app_info.flatformId
+		INNER JOIN data_dictionary AS data_two ON data_two.valueId = app_info.status
+		INNER JOIN app_category AS app_one ON app_one.id = app_info.categoryLevel1
+		INNER JOIN app_category AS  app_two ON app_two.id = app_info.categoryLevel2
+		INNER JOIN app_category AS app_three ON app_three.id = app_info.categoryLevel3
+		INNER JOIN app_version ON app_version.id = app_info.versionId
+		where data_one.typeName ='所属平台' AND data_two.typeName='APP状态' 
+		AND data_two.valueId != 2
+			<if test="softwareName!=null and softwareName !=''">
+				and softwareName like concat('%',#{softwareName},'%') 	
+			</if>
+			
+			<if test="status !=0">
+				and status = #{status}
+			</if>
+			
+			<if test="flatformId !=0">
+				and flatformId = #{flatformId}
+			</if>
+			
+			<if test="categoryLevel1 !=0">
+				and categoryLevel1 = #{categoryLevel1}
+			</if>
+			
+			<if test="categoryLevel2 !=0">
+				and categoryLevel2 = #{categoryLevel2}
+			</if>
+			
+			<if test="categoryLevel3 !=0">
+				and categoryLevel3 = #{categoryLevel3}
+			</if>
+	</select>
+	
+	<!-- app审核列表页面 -->
+	<select id="selectToCheck" resultType="Appinfo" parameterType="int">
+		SELECT app_info.id AS id,softwareName,APKName,softwareSize ,flatformId,data_one.valueName AS flatformName,STATUS,
+		data_two.valueName AS statusName,categoryLevel1,app_one.categoryName AS categoryLevel1Name,
+		categoryLevel2,app_two.categoryName AS categoryLevel2Name ,categoryLevel3,versionId,downloadLink,
+		app_three.categoryName AS categoryLevel3Name,versionNo,downloads,appInfo,logoPicPath,supportROM,interfaceLanguage FROM app_info
+		INNER JOIN data_dictionary AS data_one ON data_one.valueId = app_info.flatformId
+		INNER JOIN data_dictionary AS data_two ON data_two.valueId = app_info.status
+		INNER JOIN app_category AS app_one ON app_one.id = app_info.categoryLevel1
+		INNER JOIN app_category AS  app_two ON app_two.id = app_info.categoryLevel2
+		INNER JOIN app_category AS app_three ON app_three.id = app_info.categoryLevel3
+		INNER JOIN app_version ON app_version.id = app_info.versionId
+		WHERE data_one.typeName ='所属平台' AND data_two.typeName='APP状态'  AND app_info.id =#{id}
+	</select>
+	
+	
+	<!-- 审核状态修改 -->
+	<update id="checksave" parameterType="Appinfo">
+		UPDATE app_info SET STATUS =#{status} WHERE id =#{id}	
+	</update>
+	
+	
 
 </mapper>

@@ -35,10 +35,10 @@
             <form action="${pageContext.request.contextPath }/manager/dologin.html" method="post">
               <h1>后台管理系统</h1>
               <div>
-                <input type="text" class="form-control" name="userCode" placeholder="请输入用户名" required="" />
+                <input type="text" class="form-control" name="userCode" placeholder="请输入用户名" required=""/>
               </div>
               <div>
-                <input type="password" class="form-control" name="userPassword" placeholder="请输入密码" required="" />
+                <input type="password" class="form-control" name="userPassword" placeholder="请输入密码" required=""/>
               </div>
               <span>${error }</span>
               <div>

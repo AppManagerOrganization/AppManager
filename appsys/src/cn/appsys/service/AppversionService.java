@@ -1,8 +1,6 @@
 package cn.appsys.service;
 
 import java.util.List;
-
-
 import cn.appsys.pojo.Appversion;
 
 public interface AppversionService {
@@ -15,4 +13,6 @@ public interface AppversionService {
 	public boolean changeVersion(Appversion appversion);
 	
 	public Appversion selectVersionByAid(int id);
+	
+	public Appversion selectVersionCheck(int id);
 }

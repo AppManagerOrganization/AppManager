@@ -2,13 +2,12 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="cn.appsys.dao.DataDictionaryMapper">
 
-
+	<!-- 查找app状态 -->
 	<select id="selectStatus" resultType="Datadictionary">
 		SELECT id,typeName,valueId,valueName FROM data_dictionary WHERE typeName= 'APP状态'
 	</select>
-	
+	<!-- 查找所属平台 -->
 	<select id="selectFlatform" resultType="Datadictionary">
 		SELECT id,typeName,valueId,valueName FROM data_dictionary WHERE typeName= '所属平台'
 	</select>
-		
 </mapper>

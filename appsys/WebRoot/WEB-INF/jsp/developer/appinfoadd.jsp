@@ -122,9 +122,10 @@
             </label>
             <div class="col-md-6 col-sm-6 col-xs-12">
             <input type="file" class="form-control col-md-7 col-xs-12" name="a_logoPicPath"  required="required" id="a_logoPicPath"/>
+             <input type="hidden" id="hid_logoPicPath" name="hid_logoPicPath">
             ${fileUploadError }
             </div>
-            <input type="hidden" id="hid_logoPicPath" name="hid_logoPicPath">
+           
           </div>
           
           <div class="ln_solid"></div>
@@ -135,7 +136,7 @@
               <script type="text/javascript">
               		function getPath(){
               		 document.getElementById("hid_logoPicPath").value  = document.getElementById("a_logoPicPath").value;
-              		 alert(document.getElementById("hid_logoPicPath").value);
+              		// alert(document.getElementById("hid_logoPicPath").value);
               		 return true;
               	}
               

@@ -47,6 +47,11 @@ public class AppversionServiceImpl implements AppversionService {
 		return appversionMapper.selectVersionByAid(id);
 	}
 
+	@Override
+	public Appversion selectVersionCheck(int id) {
+		return appversionMapper.selectVersionCheck(id);
+	}
+
 	
 
 }

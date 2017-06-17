@@ -1,6 +1,6 @@
 package cn.appsys.pojo;
 
-import java.math.BigDecimal;
+
 import java.util.Date;
 
 
@@ -11,7 +11,7 @@ public class Appversion {
 	private String versionInfo;//版本介绍
 	private int publishStatus;//发布状态，1不发布 2已发布 3预发布 
 	private String downloadLink;//下载链接
-	private BigDecimal versionSize;//版本大小
+	private double versionSize;//版本大小
 	private int createdBy;
 	private Date creationDate;
 	private int modifyBy;
@@ -78,10 +78,11 @@ public class Appversion {
 	public void setDownloadLink(String downloadLink) {
 		this.downloadLink = downloadLink;
 	}
-	public BigDecimal getVersionSize() {
+	
+	public double getVersionSize() {
 		return versionSize;
 	}
-	public void setVersionSize(BigDecimal versionSize) {
+	public void setVersionSize(double versionSize) {
 		this.versionSize = versionSize;
 	}
 	public int getCreatedBy() {
